@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('video_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['like', 'dislike'])->default('like');
-            $table->boolean('active')->default(true); // Like active/inactive (unlike)
+            $table->boolean('active')->default(true);
+            $table->unique(['user_id', 'video_id']);
             $table->timestamps();
         });
     }
