@@ -1,19 +1,18 @@
-import React, { useState } from "react";
+import React, {useState, useEffect} from "react";
 import { FaYoutube, FaTags } from "react-icons/fa";
 import { MdCancel, MdShare } from "react-icons/md";
 
 const Share = () => {
   const [videoUrl, setVideoUrl] = useState("");
-  const [description, setDescription] = useState("");
-  const [tags, setTags] = useState("");
   const [errors, setErrors] = useState({});
   const [videoPreview, setVideoPreview] = useState(null);
+
+ 
 
   const validateForm = () => {
     let newErrors = {};
     if (!videoUrl) newErrors.videoUrl = "YouTube URL is required";
     else if (!isValidYouTubeUrl(videoUrl)) newErrors.videoUrl = "Invalid YouTube URL";
-    if (description.length > 500) newErrors.description = "Description too long (max 500 characters)";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -23,29 +22,52 @@ const Share = () => {
     return regExp.test(url);
   };
 
-  const handleSubmit = (e) => {
+  const fetchVideoDetails = async (url)  => {
+    try {
+        const response = await axios.post('/get-video-details', { url });
+        const {title, thumbnail, description, duration } = response.data;
+        setVideoPreview({
+            title,
+            thumbnail,
+            description,
+            duration,
+        });
+      } catch (error) {
+        const errorMessage = error.response?.data?.error || 'Failed to fetch video details';
+        setErrors({ videoUrl: errorMessage });
+      }
+  }
+  
+  const handleInputChange = (e) => {
+    setVideoUrl(e.target.value);
+  };
+
+  useEffect(() => {
+   
+      if (videoUrl) {
+        fetchVideoDetails(videoUrl);
+      }
+    
+}, [videoUrl]);
+
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
     if (validateForm()) {
-      console.log("Form submitted", { videoUrl, description, tags });
-      // Here you would typically send the data to your backend
+      try {
+        const response = await axios.post('/share-video', {url: videoUrl});
+        console.log("Video details fetched successfully:", response.data);
+        
+    }catch (error) {
+        console.log("Error fetching video details:", error);
+        setErrors({videoUrl: "Failed to fetch video  details"});
+    } 
+
     }
   };
 
-  const handleVideoUrlChange = (e) => {
-    const url = e.target.value;
-    setVideoUrl(url);
-    if (isValidYouTubeUrl(url)) {
-      const videoId = url.split("v=")[1].split("&")[0];
-      setVideoPreview({
-        id: videoId,
-        thumbnail: `https://img.youtube.com/vi/${videoId}/0.jpg`,
-        title: "YouTube Video Title", // In a real app, you'd fetch this from YouTube API
-        duration: "10:00" // In a real app, you'd fetch this from YouTube API
-      });
-    } else {
-      setVideoPreview(null);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -67,7 +89,7 @@ const Share = () => {
                   className={`block w-full pl-10 pr-12 sm:text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 ${errors.videoUrl ? 'border-red-300' : ''}`}
                   placeholder="https://www.youtube.com/watch?v=..."
                   value={videoUrl}
-                  onChange={handleVideoUrlChange}
+                  onChange={handleInputChange}
                   aria-describedby="videoUrl-error"
                 />
               </div>
@@ -77,29 +99,6 @@ const Share = () => {
                 </p>
               )}
             </div>
-
-            {/* <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                Description (optional)
-              </label>
-              <div className="mt-1">
-                <textarea
-                  id="description"
-                  rows={3}
-                  className={`shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md ${errors.description ? 'border-red-300' : ''}`}
-                  placeholder="Add a description..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  aria-describedby="description-error"
-                />
-              </div>
-              {errors.description && (
-                <p className="mt-2 text-sm text-red-600" id="description-error">
-                  {errors.description}
-                </p>
-              )}
-            </div> */}
-
             
 
             {videoPreview && (
@@ -112,7 +111,7 @@ const Share = () => {
                     className="object-cover rounded-md"
                   />
                 </div>
-                <p className="mt-2 text-sm text-gray-600">{videoPreview.title}</p>
+                <p className="mt-2 text-sm font-bold text-gray-600">{videoPreview.title}</p>
                 <p className="text-xs text-gray-500">Duration: {videoPreview.duration}</p>
               </div>
             )}
@@ -123,8 +122,6 @@ const Share = () => {
                 className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 onClick={() => {
                   setVideoUrl('');
-                  setDescription('');
-                  setTags('');
                   setErrors({});
                   setVideoPreview(null);
                 }}
