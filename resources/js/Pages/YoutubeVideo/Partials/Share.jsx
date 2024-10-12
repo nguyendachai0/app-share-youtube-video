@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { FaYoutube, FaTags } from "react-icons/fa";
+import { FaYoutube } from "react-icons/fa";
 import { MdCancel, MdShare } from "react-icons/md";
 
 const Share = () => {
