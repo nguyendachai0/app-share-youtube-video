@@ -6,7 +6,7 @@ use App\Http\Controllers\YoutubeVideoController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/',  [VideoController::class, 'returnHomePage']);
+Route::get('/',  [VideoController::class, 'returnHomePage'])->name('home');
 
 Route::post('/get-video-details', [YoutubeVideoController::class, 'getVideoDetails']);
 
@@ -14,9 +14,10 @@ Route::post('/share-video', [YoutubeVideoController::class, 'shareVideo']);
 
 Route::post('/videos/{video}/like-or-dislike', [VideoController::class, 'likeOrDislikeVideo']);
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get(
+    '/share',
+    [VideoController::class, 'returnSharePage']
+)->middleware(['auth', 'verified'])->name('share');
 
 
 

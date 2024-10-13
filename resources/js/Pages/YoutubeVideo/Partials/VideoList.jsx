@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { usePage } from "@inertiajs/react";
 import { FaThumbsUp, FaThumbsDown, FaChevronDown, FaChevronUp } from "react-icons/fa";
 // import { ToastContainer } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
@@ -9,27 +10,25 @@ import { FaThumbsUp, FaThumbsDown, FaChevronDown, FaChevronUp } from "react-icon
   const [expandedDescriptions, setExpandedDescriptions] = useState({});
   const [likedVideos, setLikedVideos] = useState({});
   const [dislikedVideos, setDislikedVideos] = useState({});
-  
-  
+  const [sortOrder, setSortOrder] = useState("likes");
+  const { auth } = usePage().props;
   
   useEffect(() => {
-    // Initialize liked and disliked states from userLikes
+
     const liked = [];
     const disliked = [];
 
     userLikes.forEach(like => {
       if (like.type === 'like') {
-        liked[like.video_id] = true; // or you can use like.id if you need to track it
+        liked[like.video_id] = true; 
       } else if (like.type === 'dislike') {
-        disliked[like.video_id] = true; // same here
+        disliked[like.video_id] = true; 
       }
     });
 
     setLikedVideos(liked);
     setDislikedVideos(disliked);
 
-    console.log(likedVideos)
-    console.log(dislikedVideos)
   }, [userLikes]);
 
   
@@ -44,6 +43,11 @@ import { FaThumbsUp, FaThumbsDown, FaChevronDown, FaChevronUp } from "react-icon
   
 
   const handleLikeDislike = async (videoId, type) => {
+
+    if (!auth.user) {
+      return window.location.href = route('login'); 
+    }
+
     try {
       const response = await axios.post(`/videos/${videoId}/like-or-dislike`, { type });
 
@@ -89,7 +93,7 @@ import { FaThumbsUp, FaThumbsDown, FaChevronDown, FaChevronUp } from "react-icon
   
         setLikedVideos((prev) => {
           const updatedLiked = { ...prev };
-          delete updatedLiked[videoId];  // Remove from liked if previously liked
+          delete updatedLiked[videoId];  
           return updatedLiked;
         });
       }
@@ -99,13 +103,22 @@ import { FaThumbsUp, FaThumbsDown, FaChevronDown, FaChevronUp } from "react-icon
       console.error("Error liking/disliking video:", error);
     }
   };
+
+  const sortedVideos = videos.sort((a, b) => {
+    if (sortOrder === "likes") {
+      return b.likes - a.likes; 
+    } else if (sortOrder === "dislikes") {
+      return b.dislikes - a.dislikes; 
+    }
+    return 0; 
+  });
  
   return (
    <>
       <h1 className="text-3xl font-bold mb-6 text-center">Video List</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {videos.map((video) => (
+        {sortedVideos.map((video) => (
           <div key={video.id} className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="relative pb-[56.25%] h-0 overflow-hidden">
               <iframe 

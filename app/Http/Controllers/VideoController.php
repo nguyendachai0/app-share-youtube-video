@@ -22,7 +22,6 @@ class VideoController extends Controller
     {
         try {
             $videos = $this->videoService->getAllVideos();
-            Log::info($videos);
             $userLikes = $this->videoService->getUserLikes();
             return Inertia::render('Home', [
                 'videos' => $videos,
@@ -33,6 +32,11 @@ class VideoController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load videos.']);
         }
+    }
+
+    public function returnSharePage()
+    {
+        return Inertia::render('SharePage');
     }
 
     public function likeOrDislikeVideo(Request $request, Video $video)
