@@ -40,4 +40,19 @@ class Video extends Model
     {
         return $this->likesByType('dislike')->count();
     }
+
+    public function getVideoIdAttribute()
+    {
+        preg_match('/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|embed)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $this->video_url, $matches);
+        return $matches[1] ?? null;
+    }
+
+    public function getEmbedUrlAttribute()
+    {
+        $videoId = $this->video_id;
+        if ($videoId) {
+            return "https://www.youtube.com/embed/{$videoId}";
+        }
+        return null;
+    }
 }

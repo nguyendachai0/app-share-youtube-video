@@ -12,9 +12,13 @@ Route::post('/get-video-details', [YoutubeVideoController::class, 'getVideoDetai
 
 Route::post('/share-video', [YoutubeVideoController::class, 'shareVideo']);
 
+Route::post('/videos/{video}/like-or-dislike', [VideoController::class, 'likeOrDislikeVideo']);
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

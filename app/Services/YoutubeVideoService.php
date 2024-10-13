@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use App\Models\Video;
+use Illuminate\Support\Facades\Log;
 
 class YoutubeVideoService
 {
@@ -38,7 +39,6 @@ class YoutubeVideoService
         if ($response->failed()) {
             return ['error' => 'Failed to fetch video details'];
         }
-
         return $this->formatResponseData($response->json());
     }
 

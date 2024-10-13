@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Like;
 use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class VideoService
 {
@@ -16,10 +17,11 @@ class VideoService
                 'title' => $video->title,
                 'description' => $video->description,
                 'likes' => $video->likeCount(),
-                'dislike' => $video->dislikeCount(),
-                'video_url' => $video->url,
+                'dislikes' => $video->dislikeCount(),
+                'video_url' => $video->video_url,
+                'embed_url' => $video->embed_url,
                 'thumbnail_url' => $video->thumbnail_url,
-                'user' => $video->user->name
+                'user_name' => $video->user->name
             ];
         });
     }
@@ -49,5 +51,17 @@ class VideoService
                 'active' => true
             ]);
         }
+    }
+
+    public function getUserLikes()
+    {
+        $userId = Auth::id();
+
+        $listLikeOrDislike = Like::where('user_id', $userId)
+            ->where('active', 1)
+            ->select('id', 'video_id', 'type')
+            ->get();
+
+        return $listLikeOrDislike;
     }
 }
