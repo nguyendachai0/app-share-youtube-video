@@ -3,39 +3,10 @@ import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 // import { ToastContainer } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 
-const VideoList = () => {
-  const [videos, setVideos] = useState([]);
+const VideoList = ({videos: localVideos}) => {
+  const [videos, setVideos] = useState(localVideos);
 
-  useEffect(() => {
-    const fetchedVideos = [
-      {
-        id: 1,
-        title: "Awesome Video 1",
-        description: "This is an awesome video about cool stuff",
-        likes: 1000,
-        dislikes: 50,
-        videoId: "dQw4w9WgXcQ"
-      },
-      {
-        id: 2,
-        title: "Cool Video 2",
-        description: "Learn about the latest trends in technology",
-        likes: 750,
-        dislikes: 25,
-        videoId: "M7lc1UVf-VE"
-      },
-      {
-        id: 3,
-        title: "Interesting Video 3",
-        description: "Discover the wonders of nature in this fascinating documentary",
-        likes: 1500,
-        dislikes: 75,
-        videoId: "OWsyrnOBsJs"
-      },
-    ];
-    setVideos(fetchedVideos);
-  }, []);
-
+ 
   return (
    <>
       <h1 className="text-3xl font-bold mb-6 text-center">Video List</h1>

@@ -25,4 +25,19 @@ class Video extends Model
     {
         return $this->hasMany(Like::class)->where('active', true);
     }
+
+    public function likesByType($type)
+    {
+        return $this->hasMany(Like::class)->where('type', $type)->where('active', true);
+    }
+
+    public function likeCount()
+    {
+        return $this->likesByType('like')->count();
+    }
+
+    public function dislikeCount()
+    {
+        return $this->likesByType('dislike')->count();
+    }
 }

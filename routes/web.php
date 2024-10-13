@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\YoutubeVideoController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/',  [HomeController::class, 'home']);
+Route::get('/',  [VideoController::class, 'returnHomePage']);
 
 Route::post('/get-video-details', [YoutubeVideoController::class, 'getVideoDetails']);
 
