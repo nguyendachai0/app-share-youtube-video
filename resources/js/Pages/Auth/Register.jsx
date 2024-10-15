@@ -2,10 +2,10 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
+import MainLayout from '@/Layouts/MainLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Register() {
+export default function Register({auth}) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -22,10 +22,10 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
+        <MainLayout auth={auth}>
             <Head title="Register" />
 
-            <form onSubmit={submit}>
+            <form className="w-1/2 mx-auto" onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 
@@ -115,6 +115,6 @@ export default function Register() {
                     </PrimaryButton>
                 </div>
             </form>
-        </GuestLayout>
+        </MainLayout>
     );
 }

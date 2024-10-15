@@ -7,7 +7,6 @@ use App\Services\VideoService;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class VideoController extends Controller
 {

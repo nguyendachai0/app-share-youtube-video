@@ -4,7 +4,6 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\YoutubeVideoController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/',  [VideoController::class, 'returnHomePage'])->name('home');
 

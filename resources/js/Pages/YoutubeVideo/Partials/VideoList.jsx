@@ -2,8 +2,6 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { usePage } from "@inertiajs/react";
 import { FaThumbsUp, FaThumbsDown, FaChevronDown, FaChevronUp } from "react-icons/fa";
-// import { ToastContainer } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
 
   const VideoList = ({videos: localVideos, userLikes }) => {
   const [videos, setVideos] = useState(localVideos);
@@ -178,7 +176,6 @@ import { FaThumbsUp, FaThumbsDown, FaChevronDown, FaChevronUp } from "react-icon
         ))}
       </div>
       
-      {/* <ToastContainer position="bottom-right" /> */}
       </>
   );
 };
